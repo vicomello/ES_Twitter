@@ -39,18 +39,18 @@ Other social media platforms:
 - `no_other`: whether participant used no other platform in past 30 min
 
 Experienced emotions (Modified SPANE):
-- `positive`: positive
-- `negative`: negative
-- `sad`: sad
-- `afraid`: afraid
-- `joyful`: joyful
-- `angry`: angry
-- `bored`: bored
-- `lonely`: lonely
-- `disgusted`: disgusted
-- `anxious`: anxious
-- `excited`: excited
-- `tired`: tired
+- `positive`
+- `negative`
+- `sad`
+- `afraid`
+- `joyful`
+- `angry`
+- `bored`
+- `lonely`
+- `disgusted`
+- `anxious`
+- `excited`
+- `tired`
 - `pos_aff`: average for positive emotions (positive, joyful, excited)
 - `pos_aff`: average for negative emotions (negative, sad, afraid, angry)
 
@@ -86,6 +86,20 @@ Survey info:
 - `obs`: number of observation (1-35), varies by amount of surveys answered by participant
 
 ## Cross-sectional variables
+(varies by participant. info is repeated for each survey pariticpant answered)
+
+Personality (Big 5 Inventory-2):
+- `extraversion`
+  - `sociability`
+  - `assertiveness`
+  - `energy_level`
+- `agreeableness`
+- `conscientiousness`
+- `neuroticism`
+- `openness`
+
+
+
 
 
 
