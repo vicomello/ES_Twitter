@@ -2,7 +2,8 @@
 
 data.csv has the experience sampling data and cross-sectional data.
 
-## Experience sampling variables (each line is an answered survey)
+## Experience sampling variables 
+(each line is an answered ES survey)
 - `ResponseId`: unique identifier for each response
 - `random_id`: random id for each participant
 - `used_tt`: if participant has user Twitter (1) or not (0) in past 30 minutes 
