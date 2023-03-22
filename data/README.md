@@ -24,6 +24,7 @@ Behaviors on Twitter:
 - `w_trending`: whether participant checked the trending topics in past 30 min
 - `w_scrolled`: whether participant scrolled down the feed in past 30 min
 
+Interacting with others:
 - `interact_other`: whether participant interacted with anyone with opposing views in past 30 min on twitter
 
 Other social media platforms:
