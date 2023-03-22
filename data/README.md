@@ -148,6 +148,21 @@ Functions of social media use scale:
 - `info_seeking`: using Twitter for information seeking
 - `coping`: using Twitter for escapism
 
+Online habits:
+- `news_consump`: degree to which participant consumes news online
+- `follow_rlpeople`: degree to which participant follows accounts of people they know in real life
+- `follow_humour`: degree to which participant follows humurous pages
+- `follow_news`: degree to which participant follows news pages
+- `follow_influencers`: degree to which participant follows influencers
+- `follow_business`: degree to which participant follows business accounts
+- `follow_famous`: degree to which participant follows celebrities
+- `follow_politician`: degree to which participant follows politicians
+- `follow_blogs`: degree to which participant follows blogs
+- `follow_incommon`: degree to which participant follows other users with interests in common
+- `follow interesting`: degree to which participant follows interesting content 
+
+
+
 
 
 
