@@ -159,7 +159,33 @@ Online habits:
 - `follow_politician`: degree to which participant follows politicians
 - `follow_blogs`: degree to which participant follows blogs
 - `follow_incommon`: degree to which participant follows other users with interests in common
-- `follow interesting`: degree to which participant follows interesting content 
+- `follow interesting`: degree to which participant follows interesting content
+
+Social Media Addiction:
+- `SM_addiction`
+
+Ideiology and Politics:
+- `political_id`: self-reported ideology, dem to rep (-3 to 3)
+- `pol_engagement`: overall score of political engagement
+- `dem_feelings`: how warm participant feels towards democrats
+- `rep_feelings`: how warm participant feels towards republicans
+- `polarization.y`: overall polarization (absolute value)
+- `con_ideology`: conservative ideology support
+- `lib_ideology`: liberal ideology support
+- `trust_gvt.y`: trust in government
+- `married_dem`: how upset they would be if a close friend or family member married a democrat
+- `married_rep`: how upset they would be if a close friend or family member married a republican
+
+News habits:
+- `news_consumption`: how often participant consumes news
+- `news_socialmedia`: frequency of social media use on social media
+- `news_newspaper`: frequency of news consumption on newspapers
+- `news_searchengine`: frequency of news consumption on search engines
+- `news_aggregator`: frequency of news consumption on news aggregators
+- `news_cabletv`: frequency of news consumption on cable tv
+- `news_suspicion.y`: general suspicion of news
+- `shared_regret`: how much participant shares something and regrets later
+
 
 
 
