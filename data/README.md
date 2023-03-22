@@ -94,6 +94,9 @@ Personality (Big 5 Inventory-2):
   - `assertiveness`
   - `energy_level`
 - `agreeableness`
+  - `compassion`
+  - `respectfulness`
+  - `trust`
 - `conscientiousness`
 - `neuroticism`
 - `openness`
