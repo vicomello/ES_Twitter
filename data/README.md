@@ -26,6 +26,65 @@ Behaviors on Twitter:
 
 - `interact_other`: whether participant interacted with anyone with opposing views in past 30 min on twitter
 
+Other social media platforms:
+- `facebook`: whether participant used facebook
+- `instagram`: whether participant used instagram in past 30 min
+- `tiktok`: whether participant used tiktok in past 30 min
+- `snapchat`: whether participant used snapchat in past 30 min
+- `whatsapp`: whether participant used whatsapp in past 30 min
+- `wechat`: whether participant used wechat in past 30 min
+- `another`: whether participant used another social media paltform in past 30 min
+- `no_other`: whether participant used no other platform in past 30 min
+
+Experienced emotions (Modified SPANE):
+- `positive`: positive
+- `negative`: negative
+- `sad`: sad
+- `afraid`: afraid
+- `joyful`: joyful
+- `angry`: angry
+- `bored`: bored
+- `lonely`: lonely
+- `disgusted`: disgusted
+- `anxious`: anxious
+- `excited`: excited
+- `tired`: tired
+- `pos_aff`: average for positive emotions (positive, joyful, excited)
+- `pos_aff`: average for negative emotions (negative, sad, afraid, angry)
+
+Social interactions:
+- `interact`: whether participant has interacted with anyone in past 30 min
+- `in_person`: whether interaction was in person (1) or not (0)
+- `quality_interaction`: quality of interaction rating
+
+Sense community:
+- `sense_community`: whether participant feels like they belong in a community
+- `respect_community`: whether participants feel respected in a community
+
+Polarization:
+- `republican_warm`: how warm participant feels towards republicans
+- `democratic_warm`: how warm participant feels towards democrats
+- `polarization.x`: absolute value of difference in warmth between parties
+
+Conspiracy tendency:
+- `news_suspicion.x`: the degree of suspicion in news
+- `trust_gvt.x`: the degree of trust in government
+
+Personal:
+- `where`: where the participant is
+- `working_hours`: whether participant is during work/school hours or not
+
+Survey info:
+- `day`: day of survey
+- `time`: time of survey
+- `StartDate`: same of "day", but different format
+- `attention_check`: whether participant passed attention check (those who didn't are not in data)
+- `day_0`: day that first survey was sent to participant
+- `days_elapsed`: number of days that passed since day_0
+- `obs`: number of observation (1-35), varies by amount of surveys answered by participant
+
+## Cross-sectional variables
+
 
 
 
