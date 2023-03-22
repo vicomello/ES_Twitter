@@ -86,7 +86,7 @@ Survey info:
 - `obs`: number of observation (1-35), varies by amount of surveys answered by participant
 
 ## Cross-sectional variables
-(varies by participant. info is repeated for each survey pariticpant answered)
+(varies by participant)
 
 Personality (Big 5 Inventory-2):
 - `extraversion`
@@ -98,8 +98,33 @@ Personality (Big 5 Inventory-2):
   - `respectfulness`
   - `trust`
 - `conscientiousness`
+  - `organization`
+  - `productiveness`
+  - `responsibility`
 - `neuroticism`
+  - `anxiety`
+  - `depression`
+  - `emotion_vol`: emotional volatility
 - `openness`
+  - `int_curiosity`: intellectual curiosity
+  - `aes_sensivity`: aesthetic sensitivity
+  - `creative_ima`: creative imagination
+
+Satisfaction with life:
+- `sats_w_life`
+
+Self-esteem:
+- `self_esteem`
+
+Loneliness:
+- `emotional_loneliness`: emotional loneliness component
+- `social_loneliness`: social loneliness component
+- `loneliness`: overall loneliness score
+
+Trait boredom:
+- `boredom`
+
+
 
 
 
