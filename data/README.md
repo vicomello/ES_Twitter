@@ -56,7 +56,7 @@ Experienced emotions (Modified SPANE):
 Social interactions:
 - `interact`: whether participant has interacted with anyone in past 30 min
 - `in_person`: whether interaction was in person (1) or not (0)
-- `quality_interaction`: quality of interaction rating
+- `quality_interaction`: rating of interaction quality
 
 Sense community:
 - `sense_community`: whether participant feels like they belong in a community
