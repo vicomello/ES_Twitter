@@ -124,6 +124,31 @@ Loneliness:
 Trait boredom:
 - `boredom`
 
+Trait impulsivity:
+- `impulsivity`
+
+Twitter use:
+- `tt_smartphone`: whether participant uses Twitter on smartphone
+- `tt_laptop`: whether participant uses Twitter on laptop
+- `tt_desktop`: whether participant uses Twitter on desktop computer
+- `tt_tablet`: whether participant uses Twitter on tablet
+- `tt_other`: whether participant uses Twitter on another device 
+- `tt_weekly`: weekly frequency of Twitter use
+- `tt_daily`: daily frequency of Twitter use
+
+Sense of community:
+- `online_community`: whether participant feels part of any online community
+- `sense_community`: how much sense of belonging participant gets online
+- `psych_sense_community`: psychological sense of community
+
+Functions of social media use scale:
+- `entertainment`: using Twitter for entertainment
+- `interacting`: using social media for social interaction
+- `promoting`: using Twitter for self-promotion
+- `info_seeking`: using Twitter for information seeking
+- `coping`: using Twitter for escapism
+
+
 
 
 
