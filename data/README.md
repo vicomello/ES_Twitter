@@ -3,7 +3,7 @@
 data.csv has the experience sampling data and cross-sectional data.
 
 ## Experience sampling variables 
-(each line is an answered ES survey)
+(each row is an answered ES survey)
 - `ResponseId`: unique identifier for each response
 - `random_id`: random id for each participant
 - `used_tt`: if participant has user Twitter (1) or not (0) in past 30 minutes 
@@ -86,7 +86,7 @@ Survey info:
 - `obs`: number of observation (1-35), varies by amount of surveys answered by participant
 
 ## Cross-sectional variables
-(varies by participant)
+(varies by participant, repeats in some rows)
 
 Personality (Big 5 Inventory-2):
 - `extraversion`
@@ -186,22 +186,8 @@ News habits:
 - `news_suspicion.y`: general suspicion of news
 - `shared_regret`: how much participant shares something and regrets later
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Demographics (collected by prolific):
+- `age`: participant's age
+- `Nationality`: participant's nationality
+- `Sex`: participant's self-reported sex 
+- `ethnicity`: participant's ethnicity
