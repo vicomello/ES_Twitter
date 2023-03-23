@@ -1,0 +1,37 @@
+---
+title: "Exploratory analyses"
+author: "Victoria Oldemburgo de Mello"
+date: "2023-03-23"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+require(tidyverse, esmpack, brms)
+# installation for esmpack available at github.com/wviechtb/esmpack
+
+df <- read_csv("../data/data.csv")
+df$affect <- df$positive - df$negative
+```
+
+Any social interaction
+
+```{r}
+
+df$interacted_lagged <- lagvar(interacted, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$affect_lagged <- lagvar(affect, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+control_fit <- brm(affect ~ interacted + interacted_lagged + affect_lagged + (interacted + interacted_lagged + affect_lagged| random_id), data=df, iter = 10000, control = list(adapt_delta = 0.99), cores=6)
+
+control_fit
+
+control_fit_empty <- brm(affect ~ interacted_lagged + affect_lagged + (interacted_lagged + affect_lagged| random_id), data=df, iter = 10000, control = list(adapt_delta = 0.99), cores=6)
+
+diff <- bayes_R2(control_fit)[1]-bayes_R2(control_fit_empty)[1]
+es <- sqrt(diff)
+es
+
+save(control_fit, file = "brm_fits/control_fit.Rda")
+save(control_fit_empty, file = "brm_fits/control_fit_empty.Rda")
+
+
+```
