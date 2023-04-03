@@ -1,0 +1,157 @@
+---
+title: "Main Effects - z scored"
+author: "VOM"
+date: "2023-01-15"
+output: html_document
+---
+
+This document includes:
+
+- All analyses for Table 2 of Manuscript ("Main effects of twitter use on outcome variables")
+- The analyses are all based on z-scored outcome variables
+
+Loading packages and data
+```{r}
+library(tidyverse)
+library(esmpack)
+library(brms)
+
+getwd()
+
+df <- read_csv("Clean_data/df_full_final_official_excluded.csv")
+df$affect <- df$positive - df$negative
+
+```
+
+## Positive Control
+In-person interaction on well-being
+```{r}
+
+df$in_person_cent <- calc.mcent(in_person, id=random_id, data=df, na.rm=TRUE)
+df$in_person_mean <- calc.mean(in_person, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+df$in_person_lagged <- lagvar(x=in_person, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$affect_z <- (df$affect - mean(df$affect))/sd(df$affect)
+df$affect_z_lagged <- lagvar(x=affect, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+positive_control <- brm(affect_z ~ affect_z_lagged + in_person_lagged + in_person_cent + in_person_mean + (affect_z_lagged + in_person_lagged + in_person_cent | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+positive_control
+
+getwd()
+
+save(positive_control, file = "Analyses/brm_fits/within_models/positive_control_z_fit.Rda")
+
+```
+
+
+## Well-being
+
+```{r}
+
+df$affect_z <- (df$affect - mean(df$affect))/sd(df$affect)
+df$affect_z_lagged <- lagvar(x=affect, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+df$used_tt_mean <- calc.mean(used_tt, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+well_being_z_fit <- brm(affect_z ~ used_tt_cent + used_tt_mean + used_tt_lagged + affect_z_lagged + (used_tt_cent +  used_tt_lagged + affect_z_lagged | random_id), data=df, iter = 10000, control = list(adapt_delta = 0.99), cores=7)
+
+well_being_z_fit
+
+save(well_being_z_fit, file = "Analyses/brm_fits/within_models/well_being_z_fit.Rda")
+
+```
+
+## Boredom
+```{r}
+
+df$bored_z <- (df$bored - mean(df$bored))/sd(df$bored)
+df$bored_z_lagged <- lagvar(x=bored_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+
+boredom_z_fit <- brm(bored_z ~ bored_z_lagged + used_tt_lagged + used_tt_cent + used_tt_mean + (bored_z_lagged + used_tt_lagged + used_tt_cent | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+boredom_z_fit
+
+save(boredom_z_fit, file = "Analyses/brm_fits/within_models/boredom_z_fit.Rda")
+
+```
+
+## Loneliness
+```{r}
+
+df$lonely_z <- (df$lonely - mean(df$lonely))/sd(df$lonely)
+df$lonely_z_lagged <- lagvar(x=lonely_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+lonely_z_fit <- brm(lonely_z ~ lonely_z_lagged + used_tt_lagged + used_tt_cent + used_tt_mean + (lonely_z_lagged + used_tt_lagged + used_tt_cent | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+lonely_z_fit
+
+save(lonely_z_fit, file = "Analyses/brm_fits/within_models/lonely_z_fit.Rda")
+
+```
+
+## Anxiety
+
+```{r}
+
+df$anxious_z <- (df$anxious - mean(df$anxious))/sd(df$anxious)
+df$anxious_z_lagged <- lagvar(x=anxious_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+
+anxiety_z_fit <- brm(anxious_z ~ anxious_z_lagged + used_tt_lagged + used_tt_cent + used_tt_mean + (anxious_z_lagged + used_tt_lagged + used_tt_cent | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+anxiety_z_fit
+
+save(anxiety_z_fit, file = "Analyses/brm_fits/within_models/anxiety_z_fit.Rda")
+
+```
+
+## Sense of Belonging
+
+```{r}
+
+df$sense_community_z <- (df$sense_community - mean(df$sense_community, na.rm = TRUE))/sd(df$sense_community, na.rm = TRUE)
+df$sense_community_z_lagged <- lagvar(x=sense_community_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+sense_community_fit <- brm(sense_community_z ~ sense_community_z_lagged + used_tt_lagged + used_tt_cent + used_tt_mean + (sense_community_z_lagged + used_tt_lagged + used_tt_cent | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+sense_community_fit
+
+save(sense_community_fit, file = "Analyses/brm_fits/within_models/sense_community_z_fit.Rda")
+
+```
+
+## Polarization
+
+```{r}
+
+df$polarization_z <- (df$polarization.x - mean(df$polarization.x, na.rm = TRUE))/sd(df$polarization.x, na.rm = TRUE)
+df$polarization_z_lagged <- lagvar(x=polarization_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+
+within_between_polarization <- brm(polarization_z ~ used_tt_cent + used_tt_mean + used_tt_lagged + polarization_z_lagged + (used_tt_cent +  used_tt_lagged + polarization_z_lagged | random_id), data=df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(within_between_polarization, file = "Analyses/brm_fits/within_models/within_between_polarization.Rda")
+
+
+```
+
+## Outrage
+```{r}
+
+df$outrage <- (df$angry + df$disgusted + df$repulsed)/3
+df$outrage_z <- (df$outrage - mean(df$outrage))/sd(df$outrage)
+df$outrage_z_lagged <- lagvar(x=outrage_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+outrage_fit_z <- brm(outrage_z ~ outrage_z_lagged + used_tt_cent + used_tt_mean + used_tt_lagged + (outrage_z_lagged + used_tt_cent + used_tt_mean + used_tt_lagged | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+outrage_fit_z
+
+save(outrage_fit_z, file = "Analyses/brm_fits/within_models/outrage_fit_z.Rda")
+
+```
+
+
+
+

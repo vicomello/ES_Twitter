@@ -35,3 +35,50 @@ save(control_fit_empty, file = "brm_fits/control_fit_empty.Rda")
 
 
 ```
+
+Quality of interaction
+```{r}
+
+df$quality_interaction[df$interacted==0] <- NA
+
+df$quality_interaction_lagged <- lagvar(quality_interaction, id=random_id, obs=obs, day=days_elapsed, data = df, lag = 1)
+
+qint_fit <- brm(affect ~ affect_lagged + quality_interaction + quality_interaction_lagged + (affect_lagged + quality_interaction + quality_interaction_lagged|random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=6)
+
+qint_fit
+
+qint_fit_empty <- brm(affect ~ affect_lagged + quality_interaction_lagged + (affect_lagged + quality_interaction_lagged|random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=6)
+
+diff <- bayes_R2(qint_fit)[1]-bayes_R2(qint_fit_empty)[1]
+es <- sqrt(diff)
+es
+
+
+save(qint_fit, file = "brm_fits/quality_interaction_fit.Rda")
+save(qint_fit_empty, file = "brm_fits/quality_interaction_fit_empty.Rda")
+
+```
+## Twitter use x Well-being
+
+```{r}
+
+df$used_tt_lagged <- lagvar(used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$affect_lagged <- lagvar(affect, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+wb_fit <- brm(affect ~ used_tt + used_tt_lagged + affect_lagged + (used_tt +  used_tt_lagged + affect_lagged | random_id), data=df, iter = 10000, control = list(adapt_delta = 0.99), cores=4)
+
+wb_fit
+
+bayes_R2(wb_fit)
+
+wb_fit_empty <- brm(affect ~ used_tt_lagged + affect_lagged + (used_tt_lagged + affect_lagged | random_id), data=df, iter = 10000, control = list(adapt_delta = 0.99), cores=4)
+
+diff <- bayes_R2(wb_fit)[1]-bayes_R2(wb_fit_empty)[1]
+es <- sqrt(diff)
+es
+
+save(wb_fit, file = "brm_fits/ttuse_wellbeing_fit.Rda")
+save(wb_fit_empty, file = "brm_fits/ttuse_wellbeing_fit_empty.Rda")
+
+```
+

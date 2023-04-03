@@ -1,0 +1,324 @@
+---
+title: "functions_behaviors_z-score"
+author: "VOM"
+date: "2023-01-16"
+output: html_document
+---
+
+Loading packages and data
+
+```{r}
+library(tidyverse)
+library(esmpack)
+library(brms)
+
+df <- read_csv("../Clean_data/df_full_final_official_excluded.csv")
+df$affect <- df$positive - df$negative
+
+```
+
+
+## Behaviors and well-being
+```{r}
+
+# behaviors
+df$affect_z <- (df$affect - mean(df$affect))/sd(df$affect)
+df$affect_z_lagged <- lagvar(x=affect, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+df$w_rt_cent <- calc.mcent(w_rt, id=random_id, data=df, na.rm=TRUE)
+df$w_rt_mean <- calc.mean(w_rt, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_liked_cent <- calc.mcent(w_liked, id=random_id, data=df, na.rm=TRUE)
+df$w_liked_mean <- calc.mean(w_liked, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_scrolled_cent <- calc.mcent(w_scrolled, id=random_id, data=df, na.rm=TRUE)
+df$w_scrolled_mean <- calc.mean(w_scrolled, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_messaged_cent <- calc.mcent(w_messaged, id=random_id, data=df, na.rm=TRUE)
+df$w_messaged_mean <- calc.mean(w_messaged, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_visited_cent <- calc.mcent(w_visited, id=random_id, data=df, na.rm=TRUE)
+df$w_visited_mean <- calc.mean(w_visited, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_commented_cent <- calc.mcent(w_commented, id=random_id, data=df, na.rm=TRUE)
+df$w_commented_mean <- calc.mean(w_commented, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_tweeted_cent <- calc.mcent(w_tweeted, id=random_id, data=df, na.rm=TRUE)
+df$w_tweeted_mean <- calc.mean(w_tweeted, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_trending_cent <- calc.mcent(w_trending, id=random_id, data=df, na.rm=TRUE)
+df$w_trending_mean <- calc.mean(w_trending, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+
+behaviors_wellbeing_fit_z <- brm(affect_z ~ affect_z_lagged + w_rt_mean + w_rt_cent + w_liked_mean + w_liked_cent + w_tweeted_mean + w_tweeted_cent + w_commented_mean + w_commented_cent + w_messaged_mean + w_messaged_cent + w_visited_mean + w_visited_cent + w_trending_mean + w_trending_cent + w_scrolled_mean + w_scrolled_cent + (affect_z_lagged + w_rt_mean + w_rt_cent + w_liked_mean + w_liked_cent + w_tweeted_mean + w_tweeted_cent + w_commented_mean + w_commented_cent + w_messaged_mean + w_messaged_cent + w_visited_mean + w_visited_cent + w_trending_mean + w_trending_cent + w_scrolled_mean + w_scrolled_cent | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(behaviors_wellbeing_fit_z, file = "brm_fits/within_models/behaviors_wellbeing_fit_z.Rda")
+
+
+```
+
+
+## Twitter functions x well-being
+```{r}
+
+df$affect_z_lagged <- lagvar(x=affect_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+df$distract_cent <- calc.mcent(distract, id=random_id, data=df, na.rm=TRUE)
+df$distract_mean <- calc.mean(distract, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$entertain_cent <- calc.mcent(entertain, id=random_id, data=df, na.rm=TRUE)
+df$entertain_mean <- calc.mean(entertain, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$promote_cent <- calc.mcent(promote, id=random_id, data=df, na.rm=TRUE)
+df$promote_mean <- calc.mean(promote, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$information_cent <- calc.mcent(information, id=random_id, data=df, na.rm=TRUE)
+df$information_mean <- calc.mean(information, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$interact_cent <- calc.mcent(interact, id=random_id, data=df, na.rm=TRUE)
+df$interact_mean <- calc.mean(interact, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+
+
+functions_wellbeing_fit_z <- brm(affect_z ~ affect_z_lagged + distract_mean + distract_cent + entertain_mean + entertain_cent + promote_mean + promote_cent + information_mean + information_cent + interact_mean + interact_cent + (affect_z_lagged + distract_mean + distract_cent + entertain_mean + entertain_cent + promote_mean + promote_cent + information_mean + information_cent + interact_mean + interact_cent|random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(functions_wellbeing_fit_z, file = "brm_fits/within_models/functions_wellbeing_fit_z.Rda")
+
+```
+
+todo
+
+## Behaviors x sense of belonging
+
+```{r}
+
+# behaviors
+df$sense_community_z <- (df$sense_community - mean(df$sense_community, na.rm = TRUE))/sd(df$sense_community, na.rm = TRUE)
+df$sense_community_z_lagged <- lagvar(x=sense_community_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$affect_z <- (df$affect - mean(df$affect))/sd(df$affect)
+df$affect_z_lagged <- lagvar(x=affect, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+
+df$w_rt_cent <- calc.mcent(w_rt, id=random_id, data=df, na.rm=TRUE)
+df$w_rt_mean <- calc.mean(w_rt, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_liked_cent <- calc.mcent(w_liked, id=random_id, data=df, na.rm=TRUE)
+df$w_liked_mean <- calc.mean(w_liked, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_scrolled_cent <- calc.mcent(w_scrolled, id=random_id, data=df, na.rm=TRUE)
+df$w_scrolled_mean <- calc.mean(w_scrolled, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_messaged_cent <- calc.mcent(w_messaged, id=random_id, data=df, na.rm=TRUE)
+df$w_messaged_mean <- calc.mean(w_messaged, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_visited_cent <- calc.mcent(w_visited, id=random_id, data=df, na.rm=TRUE)
+df$w_visited_mean <- calc.mean(w_visited, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_commented_cent <- calc.mcent(w_commented, id=random_id, data=df, na.rm=TRUE)
+df$w_commented_mean <- calc.mean(w_commented, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_tweeted_cent <- calc.mcent(w_tweeted, id=random_id, data=df, na.rm=TRUE)
+df$w_tweeted_mean <- calc.mean(w_tweeted, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_trending_cent <- calc.mcent(w_trending, id=random_id, data=df, na.rm=TRUE)
+df$w_trending_mean <- calc.mean(w_trending, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+
+behaviors_sensecomunity_fit <- brm(sense_community_z ~ sense_community_z_lagged + w_rt_mean + w_rt_cent + w_liked_mean + w_liked_cent + w_tweeted_mean + w_tweeted_cent + w_commented_mean + w_commented_cent + w_messaged_mean + w_messaged_cent + w_visited_mean + w_visited_cent + w_trending_mean + w_trending_cent + w_scrolled_mean + w_scrolled_cent + (sense_community_z_lagged + w_rt_mean + w_rt_cent + w_liked_mean + w_liked_cent + w_tweeted_mean + w_tweeted_cent + w_commented_mean + w_commented_cent + w_messaged_mean + w_messaged_cent + w_visited_mean + w_visited_cent + w_trending_mean + w_trending_cent + w_scrolled_mean + w_scrolled_cent | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+
+save(behaviors_sensecomunity_fit, file = "brm_fits/within_models/behaviors_sensecomunity_fit.Rda")
+
+
+
+```
+
+## Functions x sense of belonging
+```{r}
+
+
+df$sense_community_z_lagged <- lagvar(x=sense_community_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+df$distract_cent <- calc.mcent(distract, id=random_id, data=df, na.rm=TRUE)
+df$distract_mean <- calc.mean(distract, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$entertain_cent <- calc.mcent(entertain, id=random_id, data=df, na.rm=TRUE)
+df$entertain_mean <- calc.mean(entertain, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$promote_cent <- calc.mcent(promote, id=random_id, data=df, na.rm=TRUE)
+df$promote_mean <- calc.mean(promote, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$information_cent <- calc.mcent(information, id=random_id, data=df, na.rm=TRUE)
+df$information_mean <- calc.mean(information, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$interact_cent <- calc.mcent(interact, id=random_id, data=df, na.rm=TRUE)
+df$interact_mean <- calc.mean(interact, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+
+
+functions_sensecommunity_fit <- brm(sense_community_z ~ sense_community_z_lagged + distract_mean + distract_cent + entertain_mean + entertain_cent + promote_mean + promote_cent + information_mean + information_cent + interact_mean + interact_cent + (sense_community_z_lagged + distract_mean + distract_cent + entertain_mean + entertain_cent + promote_mean + promote_cent + information_mean + information_cent + interact_mean + interact_cent|random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(functions_sensecommunity_fit, file = "brm_fits/within_models/functions_sensecommunity_fit.Rda")
+
+```
+
+
+## Behaviors x polarization
+
+```{r}
+
+# behaviors
+# 
+# df$polarization_z <- (df$polarization.x - mean(df$polarization.x, na.rm = TRUE))/sd(df$polarization.x, na.rm = TRUE)
+# df$polarization_z_lagged <- lagvar(x=polarization_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+df$w_rt_cent <- calc.mcent(w_rt, id=random_id, data=df, na.rm=TRUE)
+df$w_rt_mean <- calc.mean(w_rt, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_liked_cent <- calc.mcent(w_liked, id=random_id, data=df, na.rm=TRUE)
+df$w_liked_mean <- calc.mean(w_liked, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_scrolled_cent <- calc.mcent(w_scrolled, id=random_id, data=df, na.rm=TRUE)
+df$w_scrolled_mean <- calc.mean(w_scrolled, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_messaged_cent <- calc.mcent(w_messaged, id=random_id, data=df, na.rm=TRUE)
+df$w_messaged_mean <- calc.mean(w_messaged, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_visited_cent <- calc.mcent(w_visited, id=random_id, data=df, na.rm=TRUE)
+df$w_visited_mean <- calc.mean(w_visited, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_commented_cent <- calc.mcent(w_commented, id=random_id, data=df, na.rm=TRUE)
+df$w_commented_mean <- calc.mean(w_commented, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_tweeted_cent <- calc.mcent(w_tweeted, id=random_id, data=df, na.rm=TRUE)
+df$w_tweeted_mean <- calc.mean(w_tweeted, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_trending_cent <- calc.mcent(w_trending, id=random_id, data=df, na.rm=TRUE)
+df$w_trending_mean <- calc.mean(w_trending, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+#TODO
+# let it running during lunch
+behaviors_polarization_fit <- brm(polarization_z ~ polarization_z_lagged + w_rt_mean + w_rt_cent + w_liked_mean + w_liked_cent + w_tweeted_mean + w_tweeted_cent + w_commented_mean + w_commented_cent + w_messaged_mean + w_messaged_cent + w_visited_mean + w_visited_cent + w_trending_mean + w_trending_cent + w_scrolled_mean + w_scrolled_cent + (polarization_z_lagged + w_rt_mean + w_rt_cent + w_liked_mean + w_liked_cent + w_tweeted_mean + w_tweeted_cent + w_commented_mean + w_commented_cent + w_messaged_mean + w_messaged_cent + w_visited_mean + w_visited_cent + w_trending_mean + w_trending_cent + w_scrolled_mean + w_scrolled_cent | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(behaviors_polarization_fit, file = "brm_fits/within_models/behaviors_polarization_fit2.Rda")
+
+
+```
+
+## Functions x polarization
+
+```{r}
+
+df$polarization_z_lagged <- lagvar(x=polarization_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+df$distract_cent <- calc.mcent(distract, id=random_id, data=df, na.rm=TRUE)
+df$distract_mean <- calc.mean(distract, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$entertain_cent <- calc.mcent(entertain, id=random_id, data=df, na.rm=TRUE)
+df$entertain_mean <- calc.mean(entertain, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$promote_cent <- calc.mcent(promote, id=random_id, data=df, na.rm=TRUE)
+df$promote_mean <- calc.mean(promote, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$information_cent <- calc.mcent(information, id=random_id, data=df, na.rm=TRUE)
+df$information_mean <- calc.mean(information, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$interact_cent <- calc.mcent(interact, id=random_id, data=df, na.rm=TRUE)
+df$interact_mean <- calc.mean(interact, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+
+
+functions_polarization_fit <- brm(polarization_z ~ polarization_z_lagged + distract_mean + distract_cent + entertain_mean + entertain_cent + promote_mean + promote_cent + information_mean + information_cent + interact_mean + interact_cent + (polarization_z_lagged + distract_mean + distract_cent + entertain_mean + entertain_cent + promote_mean + promote_cent + information_mean + information_cent + interact_mean + interact_cent|random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(functions_polarization_fit, file = "brm_fits/within_models/functions_polarization_fit.Rda")
+
+
+```
+
+## Behaviors x outrage
+
+
+```{r}
+
+# behaviors
+
+df$outrage_z <- (df$outrage - mean(df$outrage, na.rm = TRUE))/sd(df$outrage, na.rm = TRUE)
+df$outrage_z_lagged <- lagvar(x=outrage_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+df$w_rt_cent <- calc.mcent(w_rt, id=random_id, data=df, na.rm=TRUE)
+df$w_rt_mean <- calc.mean(w_rt, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_liked_cent <- calc.mcent(w_liked, id=random_id, data=df, na.rm=TRUE)
+df$w_liked_mean <- calc.mean(w_liked, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_scrolled_cent <- calc.mcent(w_scrolled, id=random_id, data=df, na.rm=TRUE)
+df$w_scrolled_mean <- calc.mean(w_scrolled, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_messaged_cent <- calc.mcent(w_messaged, id=random_id, data=df, na.rm=TRUE)
+df$w_messaged_mean <- calc.mean(w_messaged, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_visited_cent <- calc.mcent(w_visited, id=random_id, data=df, na.rm=TRUE)
+df$w_visited_mean <- calc.mean(w_visited, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_commented_cent <- calc.mcent(w_commented, id=random_id, data=df, na.rm=TRUE)
+df$w_commented_mean <- calc.mean(w_commented, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_tweeted_cent <- calc.mcent(w_tweeted, id=random_id, data=df, na.rm=TRUE)
+df$w_tweeted_mean <- calc.mean(w_tweeted, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$w_trending_cent <- calc.mcent(w_trending, id=random_id, data=df, na.rm=TRUE)
+df$w_trending_mean <- calc.mean(w_trending, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+
+behaviors_outrage_z_fit <- brm(outrage_z ~ outrage_z_lagged + w_rt_mean + w_rt_cent + w_liked_mean + w_liked_cent + w_tweeted_mean + w_tweeted_cent + w_commented_mean + w_commented_cent + w_messaged_mean + w_messaged_cent + w_visited_mean + w_visited_cent + w_trending_mean + w_trending_cent + w_scrolled_mean + w_scrolled_cent + (outrage_z_lagged + w_rt_mean + w_rt_cent + w_liked_mean + w_liked_cent + w_tweeted_mean + w_tweeted_cent + w_commented_mean + w_commented_cent + w_messaged_mean + w_messaged_cent + w_visited_mean + w_visited_cent + w_trending_mean + w_trending_cent + w_scrolled_mean + w_scrolled_cent | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(behaviors_outrage_z_fit, file = "brm_fits/within_models/behaviors_outrage_z_fit.Rda")
+
+
+
+```
+
+## Functions x outrage_z
+
+```{r}
+
+df$outrage_z_lagged <- lagvar(x=outrage_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+df$distract_cent <- calc.mcent(distract, id=random_id, data=df, na.rm=TRUE)
+df$distract_mean <- calc.mean(distract, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$entertain_cent <- calc.mcent(entertain, id=random_id, data=df, na.rm=TRUE)
+df$entertain_mean <- calc.mean(entertain, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$promote_cent <- calc.mcent(promote, id=random_id, data=df, na.rm=TRUE)
+df$promote_mean <- calc.mean(promote, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$information_cent <- calc.mcent(information, id=random_id, data=df, na.rm=TRUE)
+df$information_mean <- calc.mean(information, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+df$interact_cent <- calc.mcent(interact, id=random_id, data=df, na.rm=TRUE)
+df$interact_mean <- calc.mean(interact, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+
+
+
+functions_outrage_z_fit <- brm(outrage_z ~ outrage_z_lagged + distract_mean + distract_cent + entertain_mean + entertain_cent + promote_mean + promote_cent + information_mean + information_cent + interact_mean + interact_cent + (outrage_z_lagged + distract_mean + distract_cent + entertain_mean + entertain_cent + promote_mean + promote_cent + information_mean + information_cent + interact_mean + interact_cent|random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(functions_outrage_z_fit, file = "brm_fits/within_models/functions_outrage_z_fit.Rda")
+
+
+
+```
+
+## Interacting with others and polarization
+```{r}
+
+df$interact_other_lagged <- lagvar(x=interact_other, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$interact_other_cent <- calc.mcent(interact_other, id=random_id, data=df, na.rm=TRUE)
+df$interact_other_mean <- calc.mean(interact_other, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+df$polarization_z_lagged <- lagvar(x=polarization_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+
+polarization_interactother_fit <- brm(polarization_z ~ polarization_z_lagged + interact_other_lagged + interact_other_cent + interact_other_mean + (polarization_z_lagged + interact_other_lagged + interact_other_cent | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(polarization_interactother_fit, file = "brm_fits/within_models/polarization_interactother_fit.Rda")
+
+```

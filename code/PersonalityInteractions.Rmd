@@ -1,0 +1,353 @@
+---
+title: "Personality Interactions"
+author: "Victoria Oldemburgo de Mello"
+date: "2023-03-24"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+require(tidyverse, esmpack, brms)
+# installation for esmpack available at github.com/wviechtb/esmpack
+
+df <- read_csv("../data/data.csv")
+df$affect <- df$positive - df$negative
+
+```
+
+## Interactions
+
+### Well-being
+
+#### Conscientiousness
+
+```{r}
+
+df$affect_z <- df$positive - df$negative
+df$affect_z_lagged <- lagvar(x=affect_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+# df$used_tt_mean <- calc.mean(used_tt, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+df$conscientiousness.c <- scale(df$conscientiousness, scale = FALSE)
+
+conscientiousness_wellbeing_fit <- brm(affect_z ~ affect_z_lagged + used_tt_lagged + conscientiousness.c + used_tt_cent * conscientiousness.c + (affect_z_lagged + used_tt_lagged + conscientiousness.c + used_tt_cent * conscientiousness.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(conscientiousness_wellbeing_fit, file = "brm_fits/within_models/conscientiousness_wellbeing_fit.Rda")
+
+```
+
+#### neuroticism
+
+```{r}
+
+df$affect_z <- df$positive - df$negative
+df$affect_z_lagged <- lagvar(x=affect_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+df$neuroticism.c <- scale(df$neuroticism, scale = FALSE)
+
+neuroticism_wellbeing_fit <- brm(affect_z ~ affect_z_lagged + used_tt_lagged + neuroticism.c + used_tt_cent * neuroticism.c + (affect_z_lagged + used_tt_lagged + neuroticism.c + used_tt_cent * neuroticism.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(neuroticism_wellbeing_fit, file = "brm_fits/within_models/neuroticism_wellbeing_fit.Rda")
+
+
+neuroticism_bt_fit <- brm(affect_z ~ affect_z_lagged + neuroticism.c + used_tt_mean + neuroticism.c * used_tt_mean, data = df)
+
+```
+
+#### agreeableness
+```{r}
+
+df$affect_z <- df$positive - df$negative
+df$affect_z_lagged <- lagvar(x=affect_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+df$agreeableness.c <- scale(df$agreeableness, scale = FALSE)
+
+agreeableness_wellbeing_fit <- brm(affect_z ~ affect_z_lagged + used_tt_lagged + agreeableness.c + used_tt_cent * agreeableness.c + (affect_z_lagged + used_tt_lagged + agreeableness.c + used_tt_cent * agreeableness.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(agreeableness_wellbeing_fit, file = "brm_fits/within_models/agreeableness_wellbeing_fit.Rda")
+
+
+```
+
+
+#### extraversion
+```{r}
+
+df$affect_z <- df$positive - df$negative
+df$affect_z_lagged <- lagvar(x=affect_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+df$extraversion.c <- scale(df$extraversion, scale = FALSE)
+
+extraversion_wellbeing_fit <- brm(affect_z ~ affect_z_lagged + used_tt_lagged + extraversion.c + used_tt_cent * extraversion.c + (affect_z_lagged + used_tt_lagged + extraversion.c + used_tt_cent * extraversion.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(extraversion_wellbeing_fit, file = "brm_fits/within_models/extraversion_wellbeing_fit.Rda")
+
+```
+
+#### openness
+
+```{r}
+df$affect_z <- df$positive - df$negative
+df$affect_z_lagged <- lagvar(x=affect_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+df$openness.c <- scale(df$openness, scale = FALSE)
+
+openness_wellbeing_fit <- brm(affect_z ~ affect_z_lagged + used_tt_lagged + openness.c + used_tt_cent * openness.c + (affect_z_lagged + used_tt_lagged + openness.c + used_tt_cent * openness.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(openness_wellbeing_fit, file = "brm_fits/within_models/openness_wellbeing_fit.Rda")
+
+```
+
+### Sense of belonging
+#### conscientiousness
+
+```{r}
+
+df$sense_community_z_lagged <- lagvar(x=sense_community_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+# df$used_tt_mean <- calc.mean(used_tt, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+df$conscientiousness.c <- scale(df$conscientiousness, scale = FALSE)
+
+conscientiousness_sensecommunity_fit <- brm(sense_community_z ~ sense_community_z_lagged + used_tt_lagged + conscientiousness.c + used_tt_cent * conscientiousness.c + (sense_community_z_lagged + used_tt_lagged + conscientiousness.c + used_tt_cent * conscientiousness.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(conscientiousness_sensecommunity_fit, file = "brm_fits/within_models/conscientiousness_sensecommunity_fit.Rda")
+
+```
+
+#### neuroticism
+
+```{r}
+
+df$sense_community_z_lagged <- lagvar(x=sense_community_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+df$neuroticism.c <- scale(df$neuroticism, scale = FALSE)
+
+neuroticism_sensecommunity_fit <- brm(sense_community_z ~ sense_community_z_lagged + used_tt_lagged + neuroticism.c + used_tt_cent * neuroticism.c + (sense_community_z_lagged + used_tt_lagged + neuroticism.c + used_tt_cent * neuroticism.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(neuroticism_sensecommunity_fit, file = "brm_fits/within_models/neuroticism_sensecommunity_fit.Rda")
+
+```
+
+#### agreeableness
+```{r}
+
+df$sense_community_z_lagged <- lagvar(x=sense_community_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+df$agreeableness.c <- scale(df$agreeableness, scale = FALSE)
+
+agreeableness_sensecommunity_fit <- brm(sense_community_z ~ sense_community_z_lagged + used_tt_lagged + agreeableness.c + used_tt_cent * agreeableness.c + (sense_community_z_lagged + used_tt_lagged + agreeableness.c + used_tt_cent * agreeableness.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(agreeableness_sensecommunity_fit, file = "brm_fits/within_models/agreeableness_sensecommunity_fit.Rda")
+
+agreeableness_bt_fit <- brm(sense_community_z ~ sense_community_z_lagged + used_tt_mean * agreeableness.c, data = df)
+
+agreeableness_bt_fit
+
+
+```
+
+
+#### extraversion
+```{r}
+
+
+df$sense_community_z_lagged <- lagvar(x=sense_community_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+df$extraversion.c <- scale(df$extraversion, scale = FALSE)
+
+extraversion_sensecommunity_fit <- brm(sense_community_z ~ sense_community_z_lagged + used_tt_lagged + extraversion.c + used_tt_cent * extraversion.c + (sense_community_z_lagged + used_tt_lagged + extraversion.c + used_tt_cent * extraversion.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(extraversion_sensecommunity_fit, file = "brm_fits/within_models/extraversion_sensecommunity_fit.Rda")
+
+```
+
+#### openness
+
+```{r}
+
+
+df$sense_community_z_lagged <- lagvar(x=sense_community_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+df$openness.c <- scale(df$openness, scale = FALSE)
+
+openness_sensecommunity_fit <- brm(sense_community_z ~ sense_commSunity_lagged + used_tt_lagged + openness.c + used_tt_cent * openness.c + (sense_community_z_lagged + used_tt_lagged + openness.c + used_tt_cent * openness.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(openness_sensecommunity_fit, file = "brm_fits/within_models/openness_sensecommunity_fit.Rda")
+
+```
+
+
+### outrage_z
+#### conscientiousness
+
+```{r}
+df$outrage <- (df$angry + df$disgusted + df$repulsed)/3
+df$outrage_z <- (df$outrage - mean(df$outrage, na.rm = TRUE))/sd(df$outrage, na.rm = TRUE)
+df$outrage_z_lagged <- lagvar(x=outrage_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+# df$used_tt_mean <- calc.mean(used_tt, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+df$conscientiousness.c <- scale(df$conscientiousness, scale = FALSE)
+
+conscientiousness_outrage_z_fit <- brm(outrage_z ~ outrage_z_lagged + used_tt_lagged + conscientiousness.c + used_tt_cent * conscientiousness.c + (outrage_z_lagged + used_tt_lagged + conscientiousness.c + used_tt_cent * conscientiousness.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(conscientiousness_outrage_z_fit, file = "brm_fits/within_models/conscientiousness_outrage_z_fit.Rda")
+
+```
+
+#### neuroticism
+
+```{r}
+
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+df$neuroticism.c <- scale(df$neuroticism, scale = FALSE)
+
+neuroticism_outrage_z_fit <- brm(outrage_z ~ outrage_z_lagged + used_tt_lagged + neuroticism.c + used_tt_cent * neuroticism.c + (outrage_z_lagged + used_tt_lagged + neuroticism.c + used_tt_cent * neuroticism.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(neuroticism_outrage_z_fit, file = "brm_fits/within_models/neuroticism_outrage_z_fit.Rda")
+
+```
+
+#### agreeableness
+```{r}
+
+
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+df$agreeableness.c <- scale(df$agreeableness, scale = FALSE)
+
+agreeableness_outrage_z_fit <- brm(outrage_z ~ outrage_z_lagged + used_tt_lagged + agreeableness.c + used_tt_cent * agreeableness.c + (outrage_z_lagged + used_tt_lagged + agreeableness.c + used_tt_cent * agreeableness.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(agreeableness_outrage_z_fit, file = "brm_fits/within_models/agreeableness_outrage_z_fit.Rda")
+
+
+```
+
+
+#### extraversion
+```{r}
+
+
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+df$extraversion.c <- scale(df$extraversion, scale = FALSE)
+
+extraversion_outrage_z_fit <- brm(outrage_z ~ outrage_z_lagged + used_tt_lagged + extraversion.c + used_tt_cent * extraversion.c + (outrage_z_lagged + used_tt_lagged + extraversion.c + used_tt_cent * extraversion.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(extraversion_outrage_z_fit, file = "brm_fits/within_models/extraversion_outrage_z_fit.Rda")
+
+```
+
+#### openness
+
+```{r}
+
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+df$openness.c <- scale(df$openness, scale = FALSE)
+
+openness_outrage_z_fit <- brm(outrage_z ~ sense_community_z_lagged + used_tt_lagged + openness.c + used_tt_cent * openness.c + (outrage_z_lagged + used_tt_lagged + openness.c + used_tt_cent * openness.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(openness_outrage_z_fit, file = "brm_fits/within_models/openness_outrage_z_fit.Rda")
+
+```
+
+
+
+### Polarization
+#### conscientiousness
+
+```{r}
+
+
+df$polarization_z_lagged <- lagvar(x=polarization_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+# df$used_tt_mean <- calc.mean(used_tt, id=random_id, data=df, na.rm=TRUE, expand=TRUE)
+df$conscientiousness.c <- scale(df$conscientiousness, scale = FALSE)
+
+conscientiousness_polarization_fit <- brm(polarization_z ~ polarization_z_lagged + used_tt_lagged + conscientiousness.c + used_tt_cent * conscientiousness.c + (polarization_z_lagged + used_tt_lagged + conscientiousness.c + used_tt_cent * conscientiousness.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(conscientiousness_polarization_fit, file = "brm_fits/within_models/conscientiousness_polarization_fit.Rda")
+
+```
+
+#### neuroticism
+
+```{r}
+
+df$polarization_z_lagged <- lagvar(x=polarization_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+df$neuroticism.c <- scale(df$neuroticism, scale = FALSE)
+
+neuroticism_polarization_fit <- brm(polarization_z ~ polarization_z_lagged + used_tt_lagged + neuroticism.c + used_tt_cent * neuroticism.c + (polarization_z_lagged + used_tt_lagged + neuroticism.c + used_tt_cent * neuroticism.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(neuroticism_polarization_fit, file = "brm_fits/within_models/neuroticism_polarization_fit.Rda")
+
+```
+
+#### agreeableness
+```{r}
+
+df$polarization_z_lagged <- lagvar(x=polarization_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+df$agreeableness.c <- scale(df$agreeableness, scale = FALSE)
+
+agreeableness_polarization_fit <- brm(polarization_z ~ polarization_z_lagged + used_tt_lagged + agreeableness.c + used_tt_cent * agreeableness.c + (polarization_z_lagged + used_tt_lagged + agreeableness.c + used_tt_cent * agreeableness.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(agreeableness_polarization_fit, file = "brm_fits/within_models/agreeableness_polarization_fit.Rda")
+
+
+```
+
+
+#### extraversion
+```{r}
+
+
+df$polarization_z_lagged <- lagvar(x=polarization_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+df$extraversion.c <- scale(df$extraversion, scale = FALSE)
+
+extraversion_polarization_fit <- brm(polarization_z ~ polarization_z_lagged + used_tt_lagged + extraversion.c + used_tt_cent * extraversion.c + (polarization_z_lagged + used_tt_lagged + extraversion.c + used_tt_cent * extraversion.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(extraversion_polarization_fit, file = "brm_fits/within_models/extraversion_polarization_fit.Rda")
+
+```
+
+#### openness
+
+```{r}
+
+df$polarization_z_lagged <- lagvar(x=polarization_z, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_lagged <- lagvar(x=used_tt, id=random_id, obs=obs, day=days_elapsed, data=df, lag=1)
+df$used_tt_cent <- calc.mcent(used_tt, id=random_id, data=df, na.rm=TRUE)
+df$openness.c <- scale(df$openness, scale = FALSE)
+
+openness_polarization_fit <- brm(polarization_z ~ sense_community_z_lagged + used_tt_lagged + openness.c + used_tt_cent * openness.c + (polarization_z_lagged + used_tt_lagged + openness.c + used_tt_cent * openness.c | random_id), data = df, iter = 10000, control = list(adapt_delta = 0.99), cores=8)
+
+save(openness_polarization_fit, file = "brm_fits/within_models/openness_polarization_fit.Rda")
+
+```
+
+
+
+
+
+
+
+
+
+
